@@ -44,7 +44,7 @@ def makeDefaultType():
 
 def makeXML(vType_list):
     
-    # 루트가 될 routes 태그 생성
+    # (root1) 루트가 될 routes 태그 생성
     routes_root = Element('routes')
     # 아래는 별개로 속성 추가 방식
     routes_root.attrib["from"] = "두둥탁"
@@ -58,7 +58,7 @@ def makeXML(vType_list):
 
     # 이하 동일 과정
     node2 = Element('vType', id=vType_list[1].id, length="5.0", minGap="2.0", maxSpeed=str(vType_list[0].speed), vClass=vType_list[0].vClass)
-    node2.attrib["from"]= "ㅋㅋㅋㅋㅋㅋ"
+    node2.attrib["from"]= "adding attribute!"
     SubElement(node2, 'carFollowing-Krauss', accel=str(vType_list[1].accel), decel=str(vType_list[1].decel), sigma="0", tau=str(vType_list[1].tau))
     routes_root.append(node2)
 
@@ -72,7 +72,7 @@ def makeXML(vType_list):
 
 
 
-    # 루트가 될 configuration 태그 생성
+    # (root2) 루트가 될 configuration 태그 생성
     conf_root = Element('configuration', temp="language")
     
     # time의 태그 이름을 가진 노드를 생성
@@ -95,23 +95,25 @@ def makeXML(vType_list):
     SubElement(report_node, 'verbose', value='true')
     conf_root.append(report_node)
     
-
     # 줄 바꿈, 열 맞추기를 실시하는 indent 함수 사용, 파라미터는 루트 노드
     indent(routes_root)
     indent(conf_root)
+
     # 인터프리터 쉘에서 결과 확인하기 위한 dump 함수 사용
     #dump(routes_root, conf_root)
 
-    # routes xml을 생성
+    # 두 root1, root2를 합치기 위해 각 xml 파일 생성
+    # 1. routes xml을 생성
     tree = ElementTree(routes_root)
     filename = "routes" 
     tree.write('./' + filename + ".xml", encoding="utf-8", xml_declaration=True)
 
-    # configuration xml을 생성
+    # 2. configuration xml을 생성
     tree = ElementTree(conf_root)
     filename = "conf"
     tree.write('./' + filename + ".xml", encoding="utf-8", xml_declaration=True)
 
+    # routes.xml 파일에 conf.xml 파일을 덮어쓰기
     f1 = open('routes.xml', 'a')
     f2 = open('conf.xml', 'r')
     count = 1
